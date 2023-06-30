@@ -8,8 +8,9 @@
 using namespace std;
 
 int main() {
-  unsigned char *c = new unsigned char[MAX];
-  unsigned char *ptr = c;
+  unsigned char *tape = new unsigned char[MAX];
+  // unsigned char *ptr = c;
+  unsigned int head = 0;
   vector<char> program;
   stack<int> loopbegins;
   map<int, int> loopmatch;
@@ -44,25 +45,32 @@ int main() {
   for (auto i = 0; i < program.size(); ++i) {
     switch (program[i]) {
     case '>':
-      ptr++;
+      // ptr++;
+      head++;
       break;
     case '<':
-      ptr--;
+      // ptr--;
+      head--;
       break;
     case '+':
-      *ptr += 1;
+      //*ptr += 1;
+      tape[head] += 1;
       break;
     case '-':
-      *ptr -= 1;
+      //*ptr -= 1;
+      tape[head] -= 1;
       break;
     case '.':
-      cout << *ptr;
+      // putchar(*ptr);
+      putchar(tape[head]);
       break;
     case ',':
-      cin >> *ptr;
+      //*ptr = getchar();
+      tape[head] = getchar();
       break;
     case '[':
-      if (*ptr == 0)
+      //if (*ptr == 0)
+			if (tape[head] == 0)
         i = loopmatch[i];
       break;
     case ']':
@@ -71,6 +79,6 @@ int main() {
     }
   }
   cout << endl;
-  delete[] c;
+  delete[] tape;
   return 0;
 }
