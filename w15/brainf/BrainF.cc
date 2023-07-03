@@ -1,4 +1,5 @@
 #include "BrainF.hh"
+#include <asm-generic/errno.h>
 
 int BrainF::parse(std::istream &sourceFile) {
   char chr;
@@ -68,15 +69,35 @@ void BrainF::print(std::ostream &fout) {
 }
 
 // TODO write produce function, add it to class, etc.
-
+std::string BrainF::produce(char last, size_t counter) {
+	if (last == '>')
+		return std::string("ptr += ") + std::to_string(counter) + std::string(";");
+	if (last == '<')
+		return std::string("ptr -= ") + std::to_string(counter) + std::string(";");
+	if (last == '+')
+		return std::string("*ptr += ") + std::to_string(counter) + std::string(";");
+	if (last == '-')
+		return std::string("*ptr -= ") + std::to_string(counter) + std::string(";");
+	if (last == '.')
+		return "putchar(*ptr);";
+	if (last == ',')
+		return "*ptr = getchar();";
+	if (last == '[') 
+		return "while (*ptr) {";
+	if (last == ']')
+		return "}";
+	return "";
+}
 
 void BrainF::printC(std::ostream &fout) {
   size_t indent_level = 1;
-  std::string indent = "	";
   size_t indent_width = 4;
-  std::string cmd;
-	char last = 0;
-	size_t counter = 0;
+  char last = 0;
+  size_t counter = 0;
+  auto putIndent = [&fout](int n) {
+    for (auto i = 0; i < n; ++i)
+      fout << "\t";
+  };
 
   fout << "#include <stdio.h>\n"
        << "#include <stdlib.h>\n"
@@ -84,45 +105,23 @@ void BrainF::printC(std::ostream &fout) {
        << "int\n"
        << "main() {\n"
        << "	char *mem = (char*) malloc(30000);\n"
-       << "	char *ptr = mem;\n"
-       << "\n";
+       << "	char *ptr = mem;\n";
   for (auto i = program.begin(); i < program.end(); ++i) {
-    if (*i == ']')
+    if (last == ']')
       indent_level--;
-		if (*i != last && last != 0)
-			cmd = produce(last, counter)
-    switch (*i) {
-    case '>':
-      cmd = "++ptr;";
-      break;
-    case '<':
-      cmd = "--ptr;";
-      break;
-    case '+':
-      cmd = "++*ptr;";
-      break;
-    case '-':
-      cmd = "--*ptr;";
-      break;
-    case '.':
-      cmd = "putchar(*ptr);";
-      break;
-    case ',':
-      cmd = "*ptr = getchar();";
-      break;
-    case '[':
-      cmd = "while (*ptr) {";
-      break;
-    case ']':
-      cmd = "}";
-      break;
-    }
-    for (auto i = 0; i < indent_level; ++i)
-      fout << indent;
-    fout << cmd << "\n";
-    if (*i == '[')
+    if (*i != last && last != 0) {
+      putIndent(indent_level);
+      fout << produce(last, counter) << "\n";
+			counter = 1;
+    } else
+      ++counter;
+    if (last == '[')
       indent_level++;
+		last = *i;
   }
+  putIndent(indent_level);
+  fout << produce(last, counter) << "\n";
+
   fout << "\n"
        << "	free(mem);\n"
        << "	return 0;\n"

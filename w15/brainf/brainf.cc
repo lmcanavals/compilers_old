@@ -1,3 +1,11 @@
+/**
+ * clang++ *cc
+ * ./a.out < helloworld.bf > helloworld.c
+ * clang helloworld.c
+ * ./a.out
+ * output: Hello World!
+ * */
+
 #include "BrainF.hh"
 
 #define MAX 30000

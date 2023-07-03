@@ -17,6 +17,7 @@ public:
   int run(const size_t memSize = 30000, std::istream &fin = std::cin,
           std::ostream &fout = std::cout);
   void print(std::ostream &fout);
+	std::string produce(char last, size_t counter);
   void printC(std::ostream &fout);
 };
 
