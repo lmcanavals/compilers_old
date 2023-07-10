@@ -70,23 +70,23 @@ void BrainF::print(std::ostream &fout) {
 
 // TODO write produce function, add it to class, etc.
 std::string BrainF::produce(char last, size_t counter) {
-	if (last == '>')
-		return std::string("ptr += ") + std::to_string(counter) + std::string(";");
-	if (last == '<')
-		return std::string("ptr -= ") + std::to_string(counter) + std::string(";");
-	if (last == '+')
-		return std::string("*ptr += ") + std::to_string(counter) + std::string(";");
-	if (last == '-')
-		return std::string("*ptr -= ") + std::to_string(counter) + std::string(";");
-	if (last == '.')
-		return "putchar(*ptr);";
-	if (last == ',')
-		return "*ptr = getchar();";
-	if (last == '[') 
-		return "while (*ptr) {";
-	if (last == ']')
-		return "}";
-	return "";
+  if (last == '>')
+    return std::string("ptr += ") + std::to_string(counter) + std::string(";");
+  if (last == '<')
+    return std::string("ptr -= ") + std::to_string(counter) + std::string(";");
+  if (last == '+')
+    return std::string("*ptr += ") + std::to_string(counter) + std::string(";");
+  if (last == '-')
+    return std::string("*ptr -= ") + std::to_string(counter) + std::string(";");
+  if (last == '.')
+    return "putchar(*ptr);";
+  if (last == ',')
+    return "*ptr = getchar();";
+  if (last == '[')
+    return "while (*ptr) {";
+  if (last == ']')
+    return "}";
+  return "";
 }
 
 void BrainF::printC(std::ostream &fout) {
@@ -112,12 +112,12 @@ void BrainF::printC(std::ostream &fout) {
     if (*i != last && last != 0) {
       putIndent(indent_level);
       fout << produce(last, counter) << "\n";
-			counter = 1;
+      counter = 1;
     } else
       ++counter;
     if (last == '[')
       indent_level++;
-		last = *i;
+    last = *i;
   }
   putIndent(indent_level);
   fout << produce(last, counter) << "\n";
